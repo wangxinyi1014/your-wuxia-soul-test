@@ -5,7 +5,7 @@ A fun personality test to find which sect from *Where Winds Meet* matches your s
 
 ## 预览 / Preview
 
-👉 **在线体验 / Live Demo:** https://wangxinyi1014.github.io/your-wuxia-soul/
+👉 **在线体验 / Live Demo:** https://wangxinyi1014.github.io/your-wuxia-soul-test/
 
 ## 特色 / Features
 
