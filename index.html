@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>燕云十六声 · 测测你的门派人格</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Serif SC', serif;
+    background: #f5f0e6;
+    background-image:
+      radial-gradient(ellipse at top left, rgba(139, 119, 90, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(139, 119, 90, 0.06) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    min-height: 100vh;
+    color: #2c2416;
+    line-height: 1.8;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 顶部装饰 */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+  }
+  .header h1 {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 2.4rem;
+    color: #8b2500;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 0.9rem;
+    color: #8b755a;
+    letter-spacing: 2px;
+  }
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: #8b2500;
+    margin: 16px auto;
+    opacity: 0.6;
+  }
+
+  /* 进度条 */
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(139, 117, 90, 0.15);
+    border-radius: 2px;
+    margin: 20px 0 28px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8b2500, #c44a2a);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* 卡片 */
+  .card {
+    background: rgba(255, 252, 245, 0.9);
+    border-radius: 12px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 20px rgba(90, 70, 40, 0.08);
+    border: 1px solid rgba(139, 117, 90, 0.15);
+    margin-bottom: 20px;
+  }
+
+  .question-num {
+    font-size: 0.8rem;
+    color: #8b755a;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .question-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c2416;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .option {
+    padding: 14px 18px;
+    background: #faf6ed;
+    border: 1px solid rgba(139, 117, 90, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .option:hover {
+    background: #f0e8d6;
+    border-color: #8b2500;
+    transform: translateX(4px);
+  }
+  .option.selected {
+    background: #8b2500;
+    color: #f5f0e6;
+    border-color: #8b2500;
+  }
+
+  /* 开始页 */
+  .start-page .hero {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .start-page .hero-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+  }
+  .start-page .hero-desc {
+    font-size: 0.95rem;
+    color: #6b5a42;
+    margin: 16px 0 32px;
+    line-height: 1.9;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 14px 48px;
+    background: #8b2500;
+    color: #f5f0e6;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-family: 'Ma Shan Zheng', cursive;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(139, 37, 0, 0.25);
+  }
+  .btn-primary:hover {
+    background: #a83000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 37, 0, 0.3);
+  }
+
+  /* 结果页 */
+  .result-page {
+    text-align: center;
+  }
+  .result-badge {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #8b2500, #c44a2a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #f5f0e6;
+  }
+  .result-sect-name {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 2.2rem;
+    color: #8b2500;
+    letter-spacing: 6px;
+    margin-bottom: 8px;
+  }
+  .result-sect-tag {
+    font-size: 0.85rem;
+    color: #8b755a;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+  .result-desc {
+    text-align: left;
+    font-size: 0.95rem;
+    color: #4a3f2e;
+    line-height: 1.9;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: rgba(139, 117, 90, 0.06);
+    border-radius: 8px;
+  }
+  .result-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .trait-tag {
+    padding: 6px 14px;
+    background: rgba(139, 37, 0, 0.08);
+    color: #8b2500;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+
+  .btn-restart {
+    display: inline-block;
+    padding: 12px 36px;
+    background: transparent;
+    color: #8b2500;
+    border: 1px solid #8b2500;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-top: 8px;
+  }
+  .btn-restart:hover {
+    background: #8b2500;
+    color: #f5f0e6;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: auto;
+    padding-top: 40px;
+    font-size: 0.75rem;
+    color: #a89880;
+  }
+
+  /* 动画 */
+  .fade-in {
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>燕云门派测试</h1>
+    <div class="divider"></div>
+    <div class="subtitle">测测你是江湖哪一脉</div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- 开始页 -->
+  <div class="card start-page fade-in" id="startPage">
+    <div class="hero">
+      <div class="hero-icon">⚔️</div>
+      <div class="question-text">江湖路远，你属哪一门？</div>
+      <div class="hero-desc">
+        五题测出你的门派人格<br>
+        从狂澜到三更天，从孤云到醉花阴<br>
+        看看你的武侠灵魂属于哪里
+      </div>
+      <button class="btn-primary" onclick="startQuiz()">开始测试</button>
+    </div>
+  </div>
+
+  <!-- 问题页 -->
+  <div class="card hidden" id="questionPage">
+    <div class="question-num" id="questionNum"></div>
+    <div class="question-text" id="questionText"></div>
+    <div class="options" id="optionsList"></div>
+  </div>
+
+  <!-- 结果页 -->
+  <div class="card result-page hidden" id="resultPage">
+    <div class="result-badge" id="resultIcon">⚔️</div>
+    <div class="result-sect-name" id="resultName"></div>
+    <div class="result-sect-tag" id="resultTag"></div>
+    <div class="result-desc" id="resultDesc"></div>
+    <div class="result-traits" id="resultTraits"></div>
+    <button class="btn-restart" onclick="restartQuiz()">重新测试</button>
+  </div>
+
+  <div class="footer">
+    燕云十六声 · 粉丝向趣味测试<br>
+    与官方无关 · 仅供娱乐
+  </div>
+</div>
+
+<script>
+// 门派数据
+const sects = {
+  tianquan: {
+    name: '天泉门',
+    tag: '陌刀豪侠 · 正道标杆',
+    icon: '🛡️',
+    desc: '你是天生的领袖型人物，仗义可靠，朋友们都愿意跟着你。面对困难从不退缩，习惯挡在别人前面。你相信正义和规则，做事踏实稳重，是团队里最让人安心的存在。',
+    traits: ['仗义', '靠谱', '领袖气质', '行动派']
+  },
+  kuanglan: {
+    name: '狂澜门',
+    tag: '醉里挑灯 · 豪放纵横',
+    icon: '🗡️',
+    desc: '你豪迈洒脱，不拘小节，一杯酒就能交个朋友。看似随性，心里却有自己的原则和担当。你喜欢直来直往，讨厌弯弯绕绕，是那种关键时刻能扛事的真性情人物。',
+    traits: ['豪爽', '真性情', '重义气', '感染力强']
+  },
+  sangeng: {
+    name: '三更天',
+    tag: '夜行双刀 · 孤高刺客',
+    icon: '🌙',
+    desc: '你外表冷峻，内心有自己的执念。不喜欢群居，习惯独来独往。一旦认定目标就全力以赴，甚至不计代价。旁人觉得你神秘难测，只有真正懂你的人才知道你内心的炽热。',
+    traits: ['神秘', '执着', '高行动力', '外冷内热']
+  },
+  jiuliu: {
+    name: '九流门',
+    tag: '街头智多 · 搅局之王',
+    icon: '🎭',
+    desc: '你鬼点子多，反应快，是朋友圈里的气氛担当。别人认真的时候你爱开玩笑，真遇到事又能想出奇招破局。你讨厌死板，喜欢用灵活的方式解决问题，走到哪都能混得开。',
+    traits: ['机灵', '幽默', '应变快', '不按常理']
+  },
+  liyuan: {
+    name: '梨园',
+    tag: '伞舞轻歌 · 艺心仁术',
+    icon: '🌂',
+    desc: '你审美在线，温柔细腻，懂生活也懂别人的情绪。你擅长在混乱中给人安慰，是朋友眼中的治愈系存在。你看似柔弱，实则内心强大，能用自己的方式影响和温暖身边的人。',
+    traits: ['温柔', '有品味', '共情力强', '治愈系']
+  },
+  guyun: {
+    name: '孤云门',
+    tag: '剑隐山林 · 剑道隐士',
+    icon: '☁️',
+    desc: '你追求精神层面的自由，不喜欢被世俗规则束缚。话不多但内心有自己的坚持，做事讲究慢工出细活。你享受独处，在自己的节奏里默默打磨，不鸣则已，一鸣惊人。',
+    traits: ['内敛', '专注', '有定力', '精神独立']
+  },
+  qingxi: {
+    name: '青溪',
+    tag: '悬壶济世 · 医者仁心',
+    icon: '🍃',
+    desc: '你善良细心，总能注意到别人忽略的细节。朋友难过时第一个想到你，因为你天生会安慰人。你不喜欢争斗，更愿意用温柔和专业去解决问题，是团队里最温柔的后盾。',
+    traits: ['细心', '善良', '专业', '治愈']
+  },
+  zuihuayin: {
+    name: '醉花阴',
+    tag: '花间伞刺 · 魅惑翩翩',
+    icon: '🌸',
+    desc: '你又美又飒，社交能力拉满，走到哪都是焦点。看似玩世不恭，其实心里门儿清。你擅长用轻松的方式达成目的，不喜欢硬碰硬，是那种笑着就能把事办了的聪明人物。',
+    traits: ['有魅力', '社交牛', '聪明', '收放自如']
+  },
+  moshandao: {
+    name: '墨山道',
+    tag: '机关巧术 · 墨家非攻',
+    icon: '⚙️',
+    desc: '你是理性派，喜欢研究原理和方法。别人靠直觉，你靠逻辑。你相信技术和策略的力量，做事讲究布局和预判。平时话不多，但一开口就直击要害，是真正的技术型人才。',
+    traits: ['理性', '钻研', '有谋略', '动手能力强']
+  },
+  wenjin: {
+    name: '文津馆',
+    tag: '剑笔军师 · 谋士风范',
+    icon: '📜',
+    desc: '你博闻强识，擅长分析和规划。别人冲动的时候你在思考，别人混乱的时候你在理思路。你不一定是最张扬的那个，但一定是团队里最离不开的智囊，靠脑子吃饭。',
+    traits: ['博学', '冷静', '善分析', '军师型']
+  },
+  wuxingu: {
+    name: '无心谷',
+    tag: '蛊毒续航 · 南疆奇人',
+    icon: '🦋',
+    desc: '你不走寻常路，喜欢冷门又有趣的东西。别人凑热闹的时候你在一边研究自己的小众爱好。你看似疏离，其实有自己的节奏和坚持，是那种越了解越有魅力的类型。',
+    traits: ['小众', '独特', '有耐心', '神秘魅力']
+  },
+  wumen: {
+    name: '无门无派',
+    tag: '散人逍遥 · 自由自在',
+    icon: '🍃',
+    desc: '你最讨厌被框住，信奉自由至上。不喜欢站队，也不喜欢被规则束缚。你喜欢到处体验，什么都想试试，人生格言就是"我开心就好"。看似散漫，其实活得最通透。',
+    traits: ['自由', '随性', '探索欲强', '不设限']
+  }
+};
+
+// 题目
+const questions = [
+  {
+    text: '朋友聚会，你通常是？',
+    options: [
+      { text: '张罗一切，安排得明明白白', scores: { tianquan: 2, kuanglan: 1 } },
+      { text: '默默观察，听大家聊天', scores: { guyun: 2, qingxi: 1 } },
+      { text: '搞怪活跃气氛，逗大家开心', scores: { jiuliu: 2, zuihuayin: 1 } },
+      { text: '找个角落待着，自在最重要', scores: { wumen: 2, wuxingu: 1 } }
+    ]
+  },
+  {
+    text: '遇到麻烦，你的第一反应？',
+    options: [
+      { text: '正面硬刚，干就完了', scores: { sangeng: 2, tianquan: 1 } },
+      { text: '冷静分析，想策略找办法', scores: { wenjin: 2, moshandao: 1 } },
+      { text: '找朋友帮忙，人多力量大', scores: { liyuan: 2, qingxi: 1 } },
+      { text: '先绕开，看看情况再说', scores: { zuihuayin: 2, jiuliu: 1 } }
+    ]
+  },
+  {
+    text: '你最向往的生活是？',
+    options: [
+      { text: '扬名立万，被人敬仰', scores: { tianquan: 2, kuanglan: 1 } },
+      { text: '闲云野鹤，自由自在', scores: { wumen: 2, guyun: 1 } },
+      { text: '琴棋书画，诗意人生', scores: { liyuan: 2, zuihuayin: 1 } },
+      { text: '钻研技艺，成为专家', scores: { moshandao: 2, wenjin: 1 } }
+    ]
+  },
+  {
+    text: '朋友对你的评价最接近？',
+    options: [
+      { text: '靠谱，有事找他准没错', scores: { tianquan: 2, qingxi: 1 } },
+      { text: '鬼点子多，脑子转得快', scores: { jiuliu: 2, wenjin: 1 } },
+      { text: '神秘，有点看不懂', scores: { sangeng: 2, wuxingu: 1 } },
+      { text: '温柔，和他待着很舒服', scores: { liyuan: 2, zuihuayin: 1 } }
+    ]
+  },
+  {
+    text: '如果选一件武器，你选？',
+    options: [
+      { text: '大刀或长枪，大开大合', scores: { tianquan: 2, kuanglan: 1 } },
+      { text: '双刀或短剑，快准狠', scores: { sangeng: 2, guyun: 1 } },
+      { text: '伞或扇子，优雅好看', scores: { liyuan: 2, zuihuayin: 1 } },
+      { text: '暗器或蛊毒，出其不意', scores: { jiuliu: 2, wuxingu: 1 } }
+    ]
+  }
+];
+
+let currentQ = 0;
+let totalScores = {};
+
+function startQuiz() {
+  currentQ = 0;
+  totalScores = {};
+  document.getElementById('startPage').classList.add('hidden');
+  document.getElementById('resultPage').classList.add('hidden');
+  document.getElementById('questionPage').classList.remove('hidden');
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('questionNum').textContent = `第 ${currentQ + 1} / ${questions.length} 题`;
+  document.getElementById('questionText').textContent = q.text;
+
+  const optionsList = document.getElementById('optionsList');
+  optionsList.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.textContent = opt.text;
+    div.onclick = () => selectOption(i);
+    optionsList.appendChild(div);
+  });
+
+  updateProgress();
+  // 重新触发动画
+  const qPage = document.getElementById('questionPage');
+  qPage.classList.remove('fade-in');
+  void qPage.offsetWidth;
+  qPage.classList.add('fade-in');
+}
+
+function selectOption(index) {
+  const q = questions[currentQ];
+  const scores = q.options[index].scores;
+  for (const [k, v] of Object.entries(scores)) {
+    totalScores[k] = (totalScores[k] || 0) + v;
+  }
+
+  // 标记选中
+  document.querySelectorAll('.option').forEach((el, i) => {
+    el.classList.remove('selected');
+    if (i === index) el.classList.add('selected');
+  });
+
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < questions.length) {
+      showQuestion();
+    } else {
+      showResult();
+    }
+  }, 300);
+}
+
+function updateProgress() {
+  const pct = (currentQ / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showResult() {
+  document.getElementById('questionPage').classList.add('hidden');
+  document.getElementById('resultPage').classList.remove('hidden');
+
+  // 找出最高分
+  let maxKey = null;
+  let maxScore = 0;
+  for (const [k, v] of Object.entries(totalScores)) {
+    if (v > maxScore) {
+      maxScore = v;
+      maxKey = k;
+    }
+  }
+
+  const sect = sects[maxKey];
+  document.getElementById('resultIcon').textContent = sect.icon;
+  document.getElementById('resultName').textContent = sect.name;
+  document.getElementById('resultTag').textContent = sect.tag;
+  document.getElementById('resultDesc').textContent = sect.desc;
+
+  const traitsEl = document.getElementById('resultTraits');
+  traitsEl.innerHTML = '';
+  sect.traits.forEach(t => {
+    const span = document.createElement('span');
+    span.className = 'trait-tag';
+    span.textContent = t;
+    traitsEl.appendChild(span);
+  });
+
+  updateProgress();
+
+  const rPage = document.getElementById('resultPage');
+  rPage.classList.remove('fade-in');
+  void rPage.offsetWidth;
+  rPage.classList.add('fade-in');
+}
+
+function restartQuiz() {
+  document.getElementById('resultPage').classList.add('hidden');
+  document.getElementById('startPage').classList.remove('hidden');
+  document.getElementById('progressFill').style.width = '0%';
+}
+</script>
+
+</body>
+</html>
