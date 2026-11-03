@@ -1,12 +1,11 @@
-# 燕云十六声 · 门派性格测试
-# Sect Personality Test · Where Winds Meet
+# 你的武侠灵魂 · Your Wuxia Soul
 
 🎮 一个趣味向的门派人格测试网页，5道题测出你是《燕云十六声》里的哪一脉。
 A fun personality test to find which sect from *Where Winds Meet* matches your soul.
 
 ## 预览 / Preview
 
-👉 **在线体验 / Live Demo:** https://wangxinyi1014.github.io/yysls-sect-test/
+👉 **在线体验 / Live Demo:** https://wangxinyi1014.github.io/your-wuxia-soul/
 
 ## 特色 / Features
 
